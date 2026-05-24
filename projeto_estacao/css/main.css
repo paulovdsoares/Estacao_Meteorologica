@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -7,21 +7,21 @@
 
 
 
-
-.cabecalho{
+.cabecalho {
     background: linear-gradient(to right, #1949d5, #3156c4);
     padding: 20px 0;
 }
 
-.marca{
+.marca {
     display: flex;
     gap: 10px;
 }
-.titulo{
+
+.titulo {
     color: white;
 }
 
-.imagem_cabecalho{
+.imagem_cabecalho {
     width: 50px;
     height: 50px;
     filter: brightness(0) invert(1);
@@ -29,25 +29,161 @@
     transform: scaleX(-1);
 }
 
-.cards-container{
+.cards-container {
     display: flex;
     gap: 15px;
+    justify-content: center;
 }
 
 
 .card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-chart-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    height: 300px;
+    /* Altura máxima do gráfico */
+    max-width: 500px;
+    margin: 20px auto;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Estrutura de cada coluna (barra + legenda) */
+.chart-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 60px;
+}
+
+/* Área reservada para a barra crescer (ocupa o espaço restante acima do texto) */
+.bar-wrapper {
+    display: flex;
+    align-items: flex-end;
+    /* Garante que o crescimento comece por baixo */
+    height: 85%;
+    width: 100%;
+    background-color: #f1f5f9;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Configuração comum de preenchimento da barra */
+.bar-fill {
+    width: 100%;
+    height: 0%;
+    /* Será controlado dinamicamente pelo jQuery */
+    border-radius: 4px;
+    transition: height 0.6s ease-out;
+    /* Transição suave de movimento */
+}
+
+/* Cores customizadas para cada tipo de sensor */
+.bar-fill.bar-red {
+    background-color: #ef4444;
+}
+
+.bar-fill.bar-blue {
+    background-color: #2563eb;
+}
+
+.bar-fill.bar-gray {
+    background-color: #94a3b8;
+}
+
+.bar-fill.bar-green {
+    background-color: #10b981;
+}
+
+/* Legenda abaixo das barras */
+.bar-label {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 600;
+    text-align: center;
 }
 
 
+/* Container dos botões seletores */
+.sensor-selectors {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 
-.rodape{
+/* Estilo padrão dos botões */
+.btn-sensor {
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #64748b;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Botão quando estiver selecionado/ativo */
+.btn-sensor.active {
+    background-color: #0f172a;
+    border-color: #0f172a;
+    color: #ffffff;
+}
+
+/* Container do Histograma */
+.histogram-chart-container {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 590px;
+    margin: 20px auto;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+}
+
+#histogramaCanvas {
+    background-color: #ffffff;
+    display: block;
+}
+
+/* Container para destacar o Canvas comparativo */
+.canvas-chart-container {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 840px;
+    margin: 20px auto;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+}
+
+#graficoComparativoCanvas {
+    background-color: #ffffff;
+    display: block;
+}
+
+
+.rodape {
     background-color: #1949d5;
     padding: 15px;
     margin-top: 30px;
