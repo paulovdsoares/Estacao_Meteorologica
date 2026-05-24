@@ -1,4 +1,3 @@
-// script.js
 const SERVER_URL = 'http://localhost:8080';
 let TOKEN = null;
 
@@ -20,13 +19,17 @@ function converterPressao(valorSensor) {
 }
 
 // Autenticar no servidor
-async function autenticar() {
-    try {
-        const response = await fetch(`${SERVER_URL}/aut?usuario=admin&senha=123456`);
-        const texto = await response.text();
-        
-        if (texto.startsWith('1')) {
-            const match = texto.match(/TOKEN=(.+)/);
+function autenticar() {
+    return $.ajax({
+        url: `${SERVER_URL}/aut`,
+        method: 'GET',
+        data: {
+            usuario: 'admin',
+            senha: '123456'
+        }
+    }).then(function(resposta) {
+        if (resposta.startsWith('1')) {
+            const match = resposta.match(/TOKEN=(.+)/);
             if (match) {
                 TOKEN = match[1];
                 console.log('✅ Autenticado com sucesso');
@@ -35,84 +38,90 @@ async function autenticar() {
         }
         console.error('❌ Falha na autenticação');
         return false;
-    } catch (error) {
+    }).catch(function(error) {
         console.error('❌ Erro na autenticação:', error);
         return false;
-    }
+    });
 }
 
 // Ler um sensor específico
-async function lerSensor(sensorId) {
+function lerSensor(sensorId) {
     if (!TOKEN) {
-        console.error('Não autenticado');
-        return null;
+        return $.Deferred().reject('Não autenticado');
     }
     
-    try {
-        const response = await fetch(`${SERVER_URL}/get?token=${TOKEN}&sensor=${sensorId}`);
-        const texto = await response.text();
-        
-        if (texto.startsWith('v')) {
-            return parseInt(texto.substring(1));
+    return $.ajax({
+        url: `${SERVER_URL}/get`,
+        method: 'GET',
+        data: {
+            token: TOKEN,
+            sensor: sensorId
+        }
+    }).then(function(resposta) {
+        if (resposta.startsWith('v')) {
+            return parseInt(resposta.substring(1));
         } else {
-            console.error(`Erro ao ler sensor ${sensorId}: ${texto}`);
+            console.error(`Erro ao ler sensor ${sensorId}: ${resposta}`);
             return null;
         }
-    } catch (error) {
-        console.error(`Erro na leitura do sensor ${sensorId}:`, error);
-        return null;
-    }
+    });
 }
 
 // Buscar todos os dados climáticos
-async function buscarDadosClimaticos() {
+function buscarDadosClimaticos() {
     // Verificar se está autenticado
     if (!TOKEN) {
-        const autenticado = await autenticar();
-        if (!autenticado) {
-            return;
-        }
+        autenticar().then(function() {
+            buscarDadosClimaticos(); // Tenta novamente após autenticar
+        });
+        return;
     }
     
-    try {
-        // Ler todos os 4 sensores em paralelo
-        const [tempRaw, umidRaw, ventoRaw, pressaoRaw] = await Promise.all([
-            lerSensor('a1'),
-            lerSensor('a2'),
-            lerSensor('a3'),
-            lerSensor('a4')
-        ]);
+    // Ler todos os 4 sensores em paralelo
+    $.when(
+        lerSensor('a1'),
+        lerSensor('a2'),
+        lerSensor('a3'),
+        lerSensor('a4')
+    ).then(function(tempRaw, umidRaw, ventoRaw, pressaoRaw) {
         
-        // Atualizar a interface
-        if (tempRaw !== null) {
+        // Atualizar Temperatura
+        if (tempRaw) {
             const temperatura = converterTemperatura(tempRaw);
-            document.getElementById('temperatura').textContent = temperatura.toFixed(1);
+            $('#temperatura').text(temperatura.toFixed(1));
         }
         
-        if (umidRaw !== null) {
+        // Atualizar Umidade
+        if (umidRaw) {
             const umidade = converterUmidade(umidRaw);
-            document.getElementById('umidade').textContent = umidade.toFixed(1);
+            $('#umidade').text(umidade.toFixed(1));
         }
         
-        if (ventoRaw !== null) {
+        // Atualizar Vento
+        if (ventoRaw) {
             const vento = converterVento(ventoRaw);
-            document.getElementById('vento').textContent = vento.toFixed(1);
+            $('#vento').text(vento.toFixed(1));
         }
         
-        if (pressaoRaw !== null) {
+        // Atualizar Pressão
+        if (pressaoRaw) {
             const pressao = converterPressao(pressaoRaw);
-            document.getElementById('pressao').textContent = pressao.toFixed(1);
+            $('#pressao').text(pressao.toFixed(1));
         }
         
         console.log('✅ Dados atualizados');
         
-    } catch (error) {
+    }).fail(function(error) {
         console.error('❌ Erro ao buscar dados:', error);
-    }
+    });
 }
 
-// Iniciar atualização automática (a cada 5 segundos)
-setInterval(buscarDadosClimaticos, 5000);
+// Iniciar atualização automática a cada 5 segundos
+let intervalo = setInterval(buscarDadosClimaticos, 5000);
 
 // Buscar dados imediatamente ao carregar a página
-buscarDadosClimaticos();
+$(document).ready(function() {
+    buscarDadosClimaticos();
+    
+   
+});
