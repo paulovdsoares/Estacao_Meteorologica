@@ -5,13 +5,12 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-:root{}
+
 
 
 .cabecalho{
     background: linear-gradient(to right, #1949d5, #3156c4);
     padding: 20px 0;
-    gradient
 }
 
 .marca{
@@ -30,9 +29,32 @@
     transform: scaleX(-1);
 }
 
+.cards-container{
+    display: flex;
+    gap: 15px;
+}
+
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#temperatura {
+  font-size: 28px;
+  font-weight: bold;
+}
+
 .rodape{
     background-color: #1949d5;
     padding: 15px;
     margin-top: 30px;
     font-size: 14px;
+    color: white;
+    text-align: center;
 }
