@@ -1,159 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Estação Meteorológica</title>
     <link rel="stylesheet" href="../css/main.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
-    <header class="cabecalho">
-        <div class="marca">
-            <img class=imagem_cabecalho src="../assets/nuvem.svg" alt="nuvem">
-            <div class="titulo">
-                <h1>Estação Meteorológica</h1>
-                <p>Sistema de Monitoramento em Tempo Real</p>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img class="imagem_cabecalho" src="../assets/nuvem.svg" alt="nuvem">
+                <div>
+                    <h2>Estação</h2>
+                    <p>Meteorológica</p>
+                </div>
             </div>
-        </div>
-    </header>
+            <nav class="menu">
+                <a href="#" class="active">📊 Dashboard</a>
+                <a href="#">📈 Gráficos</a>
+                <a href="#">🗺️ Mapa</a>
+                <a href="#">⚙️ Configurações</a>
+            </nav>
+        </aside>
 
-
-
-
-
-    <main>
-
-        <section>
-            <h3>Dados em tempo Real</h3>
-
-            <div class="cards-container">
-                <div class="card">
-                    <img src="../assets/termometro.svg" alt="Temperatura" width="32">
+        <main class="main-content">
+            <header class="cabecalho">
+                <div class="marca">
+                    <div class="titulo">
+                        <h1>Estação Meteorológica</h1>
+                        <p>Sistema de Monitoramento em Tempo Real</p>
+                    </div>
+                </div>
+                <div class="info-estacao">
                     <div>
-                        <div>Temperatura</div>
+                        <span class="label">Última atualização</span>
+                        <span class="valor" id="updateTime">--:--:--</span>
+                    </div>
+                </div>
+                <div class="usuario-logado">
+                    <span>👤 Admin</span>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <div class="cards-container">
+                    <div class="card">
+                        <img src="../assets/termometro.svg" alt="Temperatura">
                         <div>
-                            <span id="temperatura">--</span>
-                            <span>°C</span>
+                            <div>Temperatura</div>
+                            <div><span id="temperatura">--</span> °C</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="../assets/gota.svg" alt="Umidade">
+                        <div>
+                            <div>Umidade</div>
+                            <div><span id="umidade">--</span> %</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="../assets/vento.svg" alt="Vento">
+                        <div>
+                            <div>Velocidade do Vento</div>
+                            <div><span id="vento">--</span> km/h</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="../assets/pressao.svg" alt="Pressão">
+                        <div>
+                            <div>Pressão</div>
+                            <div><span id="pressao">--</span> hPa</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <img src="../assets/gota.svg" alt="Temperatura" width="32">
-                    <div>
-                        <div>Umidade</div>
-                        <div>
-                            <span id="umidade">--</span>
-                            <span>%</span>
+                <div class="custom-chart-container">
+                    <div class="chart-column">
+                        <div class="bar-wrapper">
+                            <div id="bar-temperatura" class="bar-fill bar-red"></div>
                         </div>
+                        <div class="bar-label">Temp.</div>
+                        <div class="bar-value" id="valor-temp">-- °C</div>
                     </div>
-                </div>
-
-
-                <div class="card">
-                    <img src="../assets/vento.svg" alt="Temperatura" width="32">
-                    <div>
-                        <div>velocidade do vento</div>
-                        <div>
-                            <span id="vento">--</span>
-                            <span>km/h</span>
+                    <div class="chart-column">
+                        <div class="bar-wrapper">
+                            <div id="bar-umidade" class="bar-fill bar-blue"></div>
                         </div>
+                        <div class="bar-label">Umid.</div>
+                        <div class="bar-value" id="valor-umid">-- %</div>
                     </div>
-                </div>
-
-                <div class="card">
-                    <img src="../assets/pressao.svg" alt="Temperatura" width="32">
-                    <div>
-                        <div>Pressão</div>
-                        <div>
-                            <span id="pressao">--</span>
-                            <span>hPa</span>
+                    <div class="chart-column">
+                        <div class="bar-wrapper">
+                            <div id="bar-vento" class="bar-fill bar-gray"></div>
                         </div>
+                        <div class="bar-label">Vento</div>
+                        <div class="bar-value" id="valor-vento">-- km/h</div>
+                    </div>
+                    <div class="chart-column">
+                        <div class="bar-wrapper">
+                            <div id="bar-pressao" class="bar-fill bar-green"></div>
+                        </div>
+                        <div class="bar-label">Pressão</div>
+                        <div class="bar-value" id="valor-pressao">-- hPa</div>
+                    </div>
+                </div>
+
+                <div class="histograma-section">
+                    <h3>📊 Histograma por Sensor</h3>
+                    <div class="sensor-selectors">
+                        <button class="btn-sensor active" data-sensor="temperatura">🌡️ Temperatura</button>
+                        <button class="btn-sensor" data-sensor="umidade">💧 Umidade</button>
+                        <button class="btn-sensor" data-sensor="vento">🌬️ Vento</button>
+                        <button class="btn-sensor" data-sensor="pressao">📊 Pressão</button>
+                    </div>
+                    <div class="histogram-chart-container">
+                        <canvas id="histogramaCanvas" width="550" height="300"></canvas>
+                    </div>
+                </div>
+
+                <div class="comparativo-section">
+                    <h3>📈 Comparativo: Temperatura vs Umidade</h3>
+                    <div class="canvas-chart-container">
+                        <canvas id="graficoComparativoCanvas" width="700" height="300"></canvas>
+                    </div>
+                </div>
+
+                <div class="mapa-section">
+                    <h3>🗺️ Localização da Estação</h3>
+                    <div class="mapa-placeholder" id="mapa">
+                        🗺️ Google Maps será carregado aqui
                     </div>
                 </div>
             </div>
 
-        </section>
+            <footer class="rodape">
+                <p>© 2024 Estação Meteorológica - Todos os direitos reservados</p>
+            </footer>
+        </main>
+    </div>
 
-        <section>
-            <h3>Monitoramento Gráfico (Valores Atuais)</h3>
-
-            <div class="custom-chart-container">
-
-                <div class="chart-column">
-                    <div class="bar-wrapper">
-                        <div id="bar-temperatura" class="bar-fill bar-red" style="height: 0%;"></div>
-                    </div>
-                    <div class="bar-label">Temp.</div>
-                    <div class="bar-value" id="valor-temp">-- °C</div>
-                </div>
-
-                <div class="chart-column">
-                    <div class="bar-wrapper">
-                        <div id="bar-umidade" class="bar-fill bar-blue" style="height: 0%;"></div>
-                    </div>
-                    <div class="bar-label">Umid.</div>
-                    <div class="bar-value" id="valor-umid">-- %</div>
-                </div>
-
-                <div class="chart-column">
-                    <div class="bar-wrapper">
-                        <div id="bar-vento" class="bar-fill bar-gray" style="height: 0%;"></div>
-                    </div>
-                    <div class="bar-label">Vento</div>
-                    <div class="bar-value" id="valor-vento">-- km/h</div>
-                </div>
-
-                <div class="chart-column">
-                    <div class="bar-wrapper">
-                        <div id="bar-pressao" class="bar-fill bar-green" style="height: 0%;"></div>
-                    </div>
-                    <div class="bar-label">Pressão</div>
-                    <div class="bar-value" id="valor-pressao">-- hPa</div>
-                </div>
-
-            </div>
-        </section>
-
-        <section>
-            <div>
-                <h3>Histograma por Sensor Individual</h3>
-
-                <div class="sensor-selectors">
-                    <button class="btn-sensor active" data-sensor="temperatura">Temperatura</button>
-                    <button class="btn-sensor" data-sensor="umidade">Umidade</button>
-                    <button class="btn-sensor" data-sensor="vento">Vento</button>
-                    <button class="btn-sensor" data-sensor="pressao">Pressão</button>
-                </div>
-
-                <div class="histogram-chart-container">
-                    <canvas id="histogramaCanvas" width="550" height="300"></canvas>
-                </div>
-            </div>
-
-
-            <div>
-                <h3>Análise Comparativa: Temperatura vs Umidade</h3>
-                <div class="canvas-chart-container">
-                    <canvas id="histogramaComparativoCanvas" width="800" height="400"></canvas>
-                </div>
-            </div>
-        </section>
-
-
-
-        <section>Bloco de mapa para a apresentação do local da estação
-            (utilizando Google Maps); (0,5 ponto)</section>
-
-    </main>
-
-
-    <footer class="rodape"></footer>
     <script src="../js/script.js"></script>
 </body>
 
